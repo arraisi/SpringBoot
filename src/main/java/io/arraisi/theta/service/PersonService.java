@@ -1,9 +1,8 @@
 package io.arraisi.theta.service;
 
+import io.arraisi.theta.helper.Decorator;
 import io.arraisi.theta.model.Person;
-import io.arraisi.theta.model.Role;
 import io.arraisi.theta.repository.PersonRepository;
-import io.arraisi.theta.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,16 +15,34 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PersonService implements UserDetailsService {
+public class PersonService extends BaseService implements UserDetailsService {
+
+    public static final Decorator<Person> toDecorator = new Decorator<Person>() {
+        public Person decorate(Person entity) {
+            if (entity == null) {
+                return entity;
+            }
+            toDecorate(entity);
+            return entity;
+        }
+    };
+
+    public static final Decorator<Person> fromDecorator = new Decorator<Person>() {
+        public Person decorate(Person entity) {
+            if (entity == null) {
+                return entity;
+            }
+            fromDecorate(entity);
+            return entity;
+        }
+    };
 
     private final PersonRepository personRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -55,13 +72,8 @@ public class PersonService implements UserDetailsService {
         return personRepository.findByEmail(email);
     }
 
-    public List<Person> findAll() {
+    public Iterable<Person> findAll() {
         log.info("Fetching all persons");
-        return personRepository.findAll();
-    }
-
-    public void deleteExampleData() {
-        personRepository.deleteAll();
-        roleRepository.deleteAll();
+        return fromDecorator.decorate(personRepository.findAll());
     }
 }

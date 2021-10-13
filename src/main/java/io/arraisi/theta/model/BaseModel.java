@@ -50,6 +50,11 @@ public class BaseModel {
     protected String mapData;
 
     @Transient
+    @JsonIgnore
+    @Type(type = "text")
+    protected String transitMapData;
+
+    @Transient
     protected Map<String, Object> map = new HashMap<>();
 
     @Transient
@@ -117,6 +122,14 @@ public class BaseModel {
 
     public void setMapData(String mapData) {
         this.mapData = mapData;
+    }
+
+    public String getTransitMapData() {
+        return transitMapData;
+    }
+
+    public void setTransitMapData(String transitMapData) {
+        this.transitMapData = transitMapData;
     }
 
     public Map<String, Object> getMap() {
