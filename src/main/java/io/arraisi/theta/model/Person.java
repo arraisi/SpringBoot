@@ -3,8 +3,12 @@ package io.arraisi.theta.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -17,9 +21,10 @@ import java.util.List;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person extends BaseModel {
+public class Person extends BaseModel implements UserDetails {
     @NotNull
     @NotEmpty
     private String name;
@@ -47,59 +52,54 @@ public class Person extends BaseModel {
     @Transient
     protected List<String> attachmentList = new ArrayList<>();
 
-    public String getName() {
-        return name;
+    public Person(Person person) {
+        this.setId(person.getId());
+        this.name = person.getName();
+        this.email = person.getEmail();
+        this.password = person.getPassword();
+        this.active = person.getActive();
+        this.roles = person.getRoles();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"id\": \"").append(getId()).append("\", ");
+        sb.append("\"name\": \"").append(this.name).append("\", ");
+        sb.append("\"email\": \"").append(this.email).append("\", ");
+        sb.append("\"password\": \"[PROTECTED]\"").append("}");
+        return sb.toString();
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        return authorities;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.active;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.active;
     }
 
-    public Boolean getActive() {
-        return active;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.active;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public String getAttachmentListData() {
-        return attachmentListData;
-    }
-
-    public void setAttachmentListData(String attachmentListData) {
-        this.attachmentListData = attachmentListData;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<String> getAttachmentList() {
-        return attachmentList;
-    }
-
-    public void setAttachmentList(List<String> attachmentList) {
-        this.attachmentList = attachmentList;
+    @Override
+    public boolean isEnabled() {
+        return this.active;
     }
 }

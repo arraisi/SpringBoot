@@ -5,7 +5,7 @@ import io.arraisi.theta.model.Person;
 import io.arraisi.theta.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,8 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Slf4j
 @Service
@@ -51,14 +49,16 @@ public class PersonService extends BaseService implements UserDetailsService {
         if (person == null) {
             log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
+        } else if (!person.getActive()) {
+            log.error("Failed to authenticate since user account is inactive");
+            throw new UsernameNotFoundException("User is inactive");
         } else {
             log.info("User found in the database: {}", email);
         }
 
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        person.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-
-        return new org.springframework.security.core.userdetails.User(person.getEmail(), person.getPassword(), authorities);
+        UserDetails userDetails = new Person(person);
+//        new AccountStatusUserDetailsChecker().check(userDetails);
+        return userDetails;
     }
 
     public Person savePerson(Person person) {

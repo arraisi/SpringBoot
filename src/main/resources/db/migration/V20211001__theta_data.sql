@@ -17,7 +17,7 @@ VALUES (1002, '{"address":{"kota":"Jakarta"}}', 'Will Smith', 'will@mail.com', '
         '{}', null, null, 'system', '2021-10-04 09:42:29', 'system', '2021-10-04 09:42:29');
 INSERT INTO person (id, map_data, name, email, password, active, attachment_list_data, creator, editor,
                           created_by, created, updated_by, updated)
-VALUES (1003, '{"address":{"kota":"Surabaya"}}', 'Jim Carry', 'jim@mail.com', '$2a$10$/JQTGUEkGGieCve9z14couDy1oy1qGD/g0UDW/J/IYqYsBrN2Abtu', true,
+VALUES (1003, '{"address":{"kota":"Surabaya"}}', 'Jim Carry', 'jim@mail.com', '$2a$10$/JQTGUEkGGieCve9z14couDy1oy1qGD/g0UDW/J/IYqYsBrN2Abtu', false,
         '{}', null, null, 'system', '2021-10-04 09:42:29', 'system', '2021-10-04 09:42:29');
 INSERT INTO person (id, map_data, name, email, password, active, attachment_list_data, creator, editor,
                           created_by, created, updated_by, updated)
