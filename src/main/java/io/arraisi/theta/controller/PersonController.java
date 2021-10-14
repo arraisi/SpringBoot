@@ -18,12 +18,17 @@ public class PersonController {
     private final PersonService personService;
 
     @GetMapping("/list")
-    public ResponseEntity<Iterable<Person>> getPersons() {
+    public ResponseEntity<Iterable<Person>> list() {
         return ResponseEntity.ok().body(personService.findAll());
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok().body(personService.count());
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<Person> savePerson(@RequestBody Person person) {
+    public ResponseEntity<Person> save(@RequestBody Person person) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/person/save").toUriString());
         return ResponseEntity.created(uri).body(personService.savePerson(person));
     }

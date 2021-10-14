@@ -76,4 +76,8 @@ public class PersonService extends BaseService implements UserDetailsService {
         log.info("Fetching all persons");
         return fromDecorator.decorate(personRepository.findAll());
     }
+
+    public Long count() {
+        return personRepository.count();
+    }
 }

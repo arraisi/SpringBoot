@@ -180,7 +180,7 @@ Custom spring security protocol:
 * Shop List
 
     ```
-    curl --location --request GET 'http://localhost:8080/theta/shop/list' \
+    curl --location --request GET 'http://localhost:8080/theta/api/shop/list' \
     --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcm5vbGRAbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9URU5BTlQiLCJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3RoZXRhL2FwaS9sb2dpbiIsImV4cCI6MTYzMzYxNzQyOX0.gZW_RlObb_3EHsSlMd80UuXOIgWG7zJ60HGZIfE2A1o'
     ```
 

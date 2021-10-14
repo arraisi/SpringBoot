@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/shop")
+@RequestMapping("/api/shop")
 public class ShopController {
 
     @Autowired
