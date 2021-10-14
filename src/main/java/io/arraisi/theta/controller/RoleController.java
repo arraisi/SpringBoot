@@ -17,6 +17,11 @@ import java.net.URI;
 public class RoleController {
     private final RoleService roleService;
 
+    @GetMapping("/list")
+    public ResponseEntity<Iterable<Role>> getPersons() {
+        return ResponseEntity.ok().body(roleService.findAll());
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());

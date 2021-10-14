@@ -29,4 +29,8 @@ public class RoleService {
         Role role = roleRepository.findByName(roleName);
         person.getRoles().add(role);
     }
+
+    public Iterable<Role> findAll() {
+        return roleRepository.findAll();
+    }
 }

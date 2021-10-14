@@ -1,12 +1,15 @@
 package io.arraisi.theta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -17,6 +20,13 @@ public class Role {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     private String name;
+
+    @ManyToMany(fetch = EAGER)
+    @JoinTable(name = "person_roles",
+            joinColumns = @JoinColumn(name = "roles_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id"))
+    @JsonIgnoreProperties("roles")
+    private Collection<Person> persons = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -32,5 +42,13 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Collection<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(Collection<Person> persons) {
+        this.persons = persons;
     }
 }

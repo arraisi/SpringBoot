@@ -1,6 +1,7 @@
 package io.arraisi.theta.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -40,6 +41,7 @@ public class Person extends BaseModel {
     protected String attachmentListData;
 
     @ManyToMany(fetch = EAGER)
+    @JsonIgnoreProperties("persons")
     private Collection<Role> roles = new ArrayList<>();
 
     @Transient

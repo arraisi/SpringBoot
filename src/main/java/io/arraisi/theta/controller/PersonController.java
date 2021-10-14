@@ -17,7 +17,7 @@ import java.net.URI;
 public class PersonController {
     private final PersonService personService;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<Iterable<Person>> getPersons() {
         return ResponseEntity.ok().body(personService.findAll());
     }
