@@ -50,8 +50,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-                    // get person from jwt token
-                    PrincipalDto principalDto = Utility.gson.fromJson(decodedJWT.getClaim("principal").asString(), PrincipalDto.class);
+                    // get principal from jwt token
+                    Map<String, Object> principalMap = decodedJWT.getClaim("principal").asMap();
+                    ObjectMapper mapper = new ObjectMapper();
+                    PrincipalDto principalDto = mapper.convertValue(principalMap, PrincipalDto.class);
                     // passing principal
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(principalDto, null, authorities);

@@ -14,9 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -69,6 +67,15 @@ public class Person extends BaseModel implements UserDetails {
         sb.append("\"email\": \"").append(this.email).append("\", ");
         sb.append("\"password\": \"[PROTECTED]\"").append("}");
         return sb.toString();
+    }
+
+    public Map<String, Object> toMap() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("id", getId());
+        map.put("name", this.name);
+        map.put("email", this.email);
+        map.put("password", "[PROTECTED]");
+        return map;
     }
 
     @Override
