@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -20,6 +23,20 @@ public class PersonController {
     @GetMapping("/list")
     public ResponseEntity<Iterable<Person>> list() {
         return ResponseEntity.ok().body(personService.findAll());
+    }
+
+    @GetMapping("/datatables")
+    public ResponseEntity<?> datatables(
+            @RequestParam(required = false, value = "itemsPerPage", defaultValue = "10") Long itemsPerPage,
+            @RequestParam(required = false, value = "page", defaultValue = "0") Long page,
+            @RequestParam(required = false, value = "sortBy", defaultValue = "") List<String> sortBy,
+            @RequestParam(required = false, value = "sortDesc", defaultValue = "false") List<Boolean> sortDesc) {
+        Iterable<Person> list = personService.datatables(page, itemsPerPage, sortBy, sortDesc);
+        Long rowCount = personService.rowCountDatatables();
+        Map<String, Object> datatables = new HashMap<>();
+        datatables.put("data", list);
+        datatables.put("size", rowCount);
+        return ResponseEntity.ok().body(datatables);
     }
 
     @GetMapping("/count")
