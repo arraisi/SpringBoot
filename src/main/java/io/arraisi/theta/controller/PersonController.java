@@ -34,7 +34,7 @@ public class PersonController {
         Iterable<Person> list = personService.datatables(page, itemsPerPage, sortBy, sortDesc);
         Long rowCount = personService.rowCountDatatables();
         Map<String, Object> datatables = new HashMap<>();
-        datatables.put("data", list);
+        datatables.put("list", list);
         datatables.put("size", rowCount);
         return ResponseEntity.ok().body(datatables);
     }
