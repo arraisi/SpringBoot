@@ -14,10 +14,6 @@ import java.util.Optional;
 public class JpaAuditingConfiguration {
     @Bean
     public AuditorAware<String> auditorProvider() {
-        /*
-          if you are using spring security, you can get the currently logged username with following code segment.
-          SecurityContextHolder.getContext().getAuthentication().getName()
-         */
         return () -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             return authentication == null ? Optional.of("system") : Optional.of(authentication.getName());
