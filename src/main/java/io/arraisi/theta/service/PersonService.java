@@ -70,18 +70,9 @@ public class PersonService extends BaseService implements UserDetailsService {
         return personRepository.save(person);
     }
 
-    public Person findByEmail(String email) {
-        log.info("Fetching person {}", email);
-        return personRepository.findByEmail(email);
-    }
-
     public Iterable<Person> findAll() {
         log.info("Fetching all persons");
         return fromDecorator.decorate(personRepository.findAll());
-    }
-
-    public Long count() {
-        return personRepository.count();
     }
 
     public DataTablesResponse<Person> datatables(Long page, Long itemsPerPage, List<String> sortBy, List<Boolean> sortDesc) {
@@ -90,11 +81,7 @@ public class PersonService extends BaseService implements UserDetailsService {
         return new DataTablesResponse<>(list, rowCount);
     }
 
-    public void deleteById(Long id) {
-        personRepository.deleteById(id);
-    }
-
     public Iterable<Person> findByActive(Boolean active) {
-        return personRepository.findByActive(active);
+        return fromDecorator.decorate(personRepository.findByActive(active));
     }
 }

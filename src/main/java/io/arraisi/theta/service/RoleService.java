@@ -18,19 +18,10 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final PersonRepository personRepository;
 
-    public Role saveRole(Role role) {
-        log.info("Saving new role {} to the database", role.getName());
-        return roleRepository.save(role);
-    }
-
     public void addRoleToPerson(String email, String roleName) {
         log.info("Adding role {} to person {}", roleName, email);
         Person person = personRepository.findByEmail(email);
         Role role = roleRepository.findByName(roleName);
         person.getRoles().add(role);
-    }
-
-    public Iterable<Role> findAll() {
-        return roleRepository.findAll();
     }
 }

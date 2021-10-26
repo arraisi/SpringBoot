@@ -1,9 +1,11 @@
 package io.arraisi.theta.controller;
 
 import io.arraisi.theta.model.Role;
+import io.arraisi.theta.repository.RoleRepository;
 import io.arraisi.theta.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,16 +18,17 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class RoleController {
     private final RoleService roleService;
+    private final RoleRepository roleRepository;
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<Role>> getPersons() {
-        return ResponseEntity.ok().body(roleService.findAll());
+        return ResponseEntity.ok().body(roleRepository.findAll());
     }
 
     @PostMapping("/save")
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(roleService.saveRole(role));
+        log.info("Saving new role {} to the database", role.getName());
+        return new ResponseEntity<>(roleRepository.save(role), HttpStatus.CREATED);
     }
 
     @PostMapping("/addtoperson")

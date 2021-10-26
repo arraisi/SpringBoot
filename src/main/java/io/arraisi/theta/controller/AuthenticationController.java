@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.arraisi.theta.model.Person;
 import io.arraisi.theta.model.Role;
-import io.arraisi.theta.service.PersonService;
+import io.arraisi.theta.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final PersonService personService;
+    private final PersonRepository personRepository;
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -43,7 +43,7 @@ public class AuthenticationController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                Person person = personService.findByEmail(username);
+                Person person = personRepository.findByEmail(username);
                 String access_token = JWT.create()
                         .withSubject(person.getEmail())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))

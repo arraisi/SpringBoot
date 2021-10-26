@@ -1,6 +1,7 @@
 package io.arraisi.theta.controller;
 
 import io.arraisi.theta.model.Person;
+import io.arraisi.theta.repository.PersonRepository;
 import io.arraisi.theta.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService personService;
+    private final PersonRepository personRepository;
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<Person>> list() {
@@ -34,7 +36,13 @@ public class PersonController {
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok().body(personService.count());
+        return ResponseEntity.ok().body(personRepository.count());
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<Person> findByEmail(@RequestParam String email) {
+        log.info("Fetching person {}", email);
+        return ResponseEntity.ok().body(personRepository.findByEmail(email));
     }
 
     @GetMapping("/list/active")
@@ -57,7 +65,7 @@ public class PersonController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestParam Long id) {
-        personService.deleteById(id);
+        personRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
