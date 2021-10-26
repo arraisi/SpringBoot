@@ -7,8 +7,10 @@ import io.arraisi.theta.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import static org.springframework.transaction.annotation.Propagation.*;
+
 
 @Slf4j
 @Service
@@ -23,5 +25,10 @@ public class RoleService {
         Person person = personRepository.findByEmail(email);
         Role role = roleRepository.findByName(roleName);
         person.getRoles().add(role);
+    }
+
+    @Transactional(propagation = REQUIRED)
+    public Role save(Role role) {
+        return roleRepository.save(role);
     }
 }

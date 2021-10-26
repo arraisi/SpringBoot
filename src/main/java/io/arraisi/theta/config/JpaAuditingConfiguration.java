@@ -1,5 +1,7 @@
 package io.arraisi.theta.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.arraisi.theta.security.Principal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -16,7 +18,9 @@ public class JpaAuditingConfiguration {
     public AuditorAware<String> auditorProvider() {
         return () -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            return authentication == null ? Optional.of("system") : Optional.of(authentication.getName());
+            ObjectMapper mapper = new ObjectMapper();
+            Principal principal = mapper.convertValue(authentication.getPrincipal(), Principal.class);
+            return Optional.of(principal.getName());
         };
     }
 }

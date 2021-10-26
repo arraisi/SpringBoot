@@ -55,12 +55,17 @@ public class PersonController {
         return new ResponseEntity<>(personService.savePerson(person), HttpStatus.CREATED);
     }
 
+    @PostMapping("/trx/demo")
+    public ResponseEntity<Person> trxDemo(@RequestBody Person person) throws Exception {
+        return new ResponseEntity<>(personService.trxDemo(person), HttpStatus.CREATED);
+    }
+
     @PutMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody Person person) {
         if (person.getId() == null) {
             return ResponseEntity.badRequest().build();
         }
-        return new ResponseEntity<>(personService.savePerson(person), HttpStatus.OK);
+        return new ResponseEntity<>(personRepository.save(person), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")

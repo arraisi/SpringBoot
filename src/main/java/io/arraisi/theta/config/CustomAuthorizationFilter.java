@@ -5,8 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.arraisi.theta.helper.Utility;
-import io.arraisi.theta.security.PrincipalDto;
+import io.arraisi.theta.security.Principal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,10 +52,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     // get principal from jwt token
                     Map<String, Object> principalMap = decodedJWT.getClaim("principal").asMap();
                     ObjectMapper mapper = new ObjectMapper();
-                    PrincipalDto principalDto = mapper.convertValue(principalMap, PrincipalDto.class);
+                    Principal principal = mapper.convertValue(principalMap, Principal.class);
                     // passing principal
                     UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(principalDto, null, authorities);
+                            new UsernamePasswordAuthenticationToken(principal, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
                 } catch (Exception exception) {

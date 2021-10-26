@@ -4,6 +4,7 @@ import io.arraisi.theta.dao.PersonDao;
 import io.arraisi.theta.helper.Decorator;
 import io.arraisi.theta.model.DataTablesResponse;
 import io.arraisi.theta.model.Person;
+import io.arraisi.theta.model.Role;
 import io.arraisi.theta.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
@@ -45,6 +47,7 @@ public class PersonService extends BaseService implements UserDetailsService {
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
     private final PersonDao personDao;
+    private final RoleService roleService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -68,6 +71,17 @@ public class PersonService extends BaseService implements UserDetailsService {
         log.info("Saving new person {} to the database", person.getName());
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
+    }
+
+    @Transactional
+    public Person trxDemo(Person person) throws SQLException {
+        log.info("Saving new person {} to the database", person.getName());
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
+        Role role = new Role();
+        role.setName("Test");
+        roleService.save(role);
+//        throw new SQLException("Throwing exception for demoing rollback");
+        return personRepository.save(null);
     }
 
     public Iterable<Person> findAll() {
