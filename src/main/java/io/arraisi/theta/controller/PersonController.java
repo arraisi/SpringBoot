@@ -73,4 +73,9 @@ public class PersonController {
         personRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/inactive/delete")
+    public ResponseEntity<?> deleteInactivePerson() {
+        return ResponseEntity.ok(personService.deleteInactivePerson());
+    }
 }

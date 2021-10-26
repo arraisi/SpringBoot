@@ -98,4 +98,12 @@ public class PersonService extends BaseService implements UserDetailsService {
     public Iterable<Person> findByActive(Boolean active) {
         return fromDecorator.decorate(personRepository.findByActive(active));
     }
+
+    public int deleteInactivePerson() {
+        // demo modifying query
+        int response = personRepository.deleteInactivePerson();
+//        int response = personRepository.deleteByActive(false);
+        log.info("response: {}", response);
+        return response;
+    }
 }
