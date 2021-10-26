@@ -2,7 +2,7 @@ package io.arraisi.theta.service;
 
 import io.arraisi.theta.dao.PersonDao;
 import io.arraisi.theta.helper.Decorator;
-import io.arraisi.theta.model.DataTablesResponse;
+import io.arraisi.theta.helper.DataTablesResponse;
 import io.arraisi.theta.model.Person;
 import io.arraisi.theta.model.Role;
 import io.arraisi.theta.repository.PersonRepository;

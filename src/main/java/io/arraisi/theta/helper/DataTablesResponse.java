@@ -1,4 +1,4 @@
-package io.arraisi.theta.model;
+package io.arraisi.theta.helper;
 
 import java.util.List;
 
