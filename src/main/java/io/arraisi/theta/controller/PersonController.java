@@ -4,20 +4,18 @@ import io.arraisi.theta.model.Person;
 import io.arraisi.theta.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/person")
 @RequiredArgsConstructor
 public class PersonController {
+
     private final PersonService personService;
 
     @GetMapping("/list")
@@ -31,12 +29,7 @@ public class PersonController {
             @RequestParam(required = false, value = "page", defaultValue = "0") Long page,
             @RequestParam(required = false, value = "sortBy", defaultValue = "") List<String> sortBy,
             @RequestParam(required = false, value = "sortDesc", defaultValue = "false") List<Boolean> sortDesc) {
-        Iterable<Person> list = personService.datatables(page, itemsPerPage, sortBy, sortDesc);
-        Long rowCount = personService.rowCountDatatables();
-        Map<String, Object> datatables = new HashMap<>();
-        datatables.put("list", list);
-        datatables.put("size", rowCount);
-        return ResponseEntity.ok().body(datatables);
+        return ResponseEntity.ok().body(personService.datatables(page, itemsPerPage, sortBy, sortDesc));
     }
 
     @GetMapping("/count")
@@ -44,9 +37,27 @@ public class PersonController {
         return ResponseEntity.ok().body(personService.count());
     }
 
+    @GetMapping("/list/active")
+    public ResponseEntity<Iterable<Person>> findByActive(@RequestParam Boolean active) {
+        return ResponseEntity.ok().body(personService.findByActive(active));
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Person> save(@RequestBody Person person) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/person/save").toUriString());
-        return ResponseEntity.created(uri).body(personService.savePerson(person));
+        return new ResponseEntity<>(personService.savePerson(person), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<?> edit(@RequestBody Person person) {
+        if (person.getId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return new ResponseEntity<>(personService.savePerson(person), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam Long id) {
+        personService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

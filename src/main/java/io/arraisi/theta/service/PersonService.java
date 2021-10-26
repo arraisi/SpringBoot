@@ -1,13 +1,12 @@
 package io.arraisi.theta.service;
 
+import io.arraisi.theta.dao.PersonDao;
 import io.arraisi.theta.helper.Decorator;
-import io.arraisi.theta.helper.Utility;
+import io.arraisi.theta.model.DataTablesResponse;
 import io.arraisi.theta.model.Person;
 import io.arraisi.theta.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,7 +44,7 @@ public class PersonService extends BaseService implements UserDetailsService {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final PersonDao personDao;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -85,37 +84,17 @@ public class PersonService extends BaseService implements UserDetailsService {
         return personRepository.count();
     }
 
-    public Iterable<Person> datatables(Long page, Long itemsPerPage, List<String> sortBy, List<Boolean> sortDesc) {
-        StringBuilder baseQuery = new StringBuilder("" +
-                "select "
-                + "id, "
-                + "map_data, "
-                + "name, "
-                + "email, "
-                + "password, "
-                + "active " +
-                "from person ");
-
-        String querySortingAndLimit = Utility.querySorting(sortBy, sortDesc);
-        baseQuery.append(querySortingAndLimit);
-        baseQuery.append(" LIMIT :offset,:size");
-
-        MapSqlParameterSource map = new MapSqlParameterSource();
-        map.addValue("offset", page * itemsPerPage);
-        map.addValue("size", itemsPerPage);
-
-        return this.jdbcTemplate.query(baseQuery.toString(), map, (rs, rowNum) -> {
-            Person person = new Person();
-            person.setId(rs.getLong("id"));
-            person.setName(rs.getString("name"));
-            person.setEmail(rs.getString("email"));
-            person.setActive(rs.getBoolean("active"));
-            return person;
-        });
+    public DataTablesResponse<Person> datatables(Long page, Long itemsPerPage, List<String> sortBy, List<Boolean> sortDesc) {
+        List<Person> list = personDao.listDataTables(page, itemsPerPage, sortBy, sortDesc);
+        Long rowCount = personDao.rowCountDatatables();
+        return new DataTablesResponse<>(list, rowCount);
     }
 
-    public Long rowCountDatatables() {
-        String query = "select count(*) rowCount from person";
-        return jdbcTemplate.queryForObject(query, new MapSqlParameterSource(), Long.class);
+    public void deleteById(Long id) {
+        personRepository.deleteById(id);
+    }
+
+    public Iterable<Person> findByActive(Boolean active) {
+        return personRepository.findByActive(active);
     }
 }
