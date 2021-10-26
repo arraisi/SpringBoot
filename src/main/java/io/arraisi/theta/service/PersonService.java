@@ -69,6 +69,7 @@ public class PersonService extends BaseService implements UserDetailsService {
 
     public Person savePerson(Person person) {
         log.info("Saving new person {} to the database", person.getName());
+        toDecorator.decorate(person);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
     }
