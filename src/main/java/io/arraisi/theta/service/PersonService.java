@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
@@ -74,7 +75,6 @@ public class PersonService extends BaseService implements UserDetailsService {
         return personRepository.save(person);
     }
 
-    @Transactional
     public Person trxDemo(Person person) throws SQLException {
         log.info("Saving new person {} to the database", person.getName());
         person.setPassword(passwordEncoder.encode(person.getPassword()));

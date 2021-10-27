@@ -20,7 +20,7 @@ public class JpaAuditingConfiguration {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             ObjectMapper mapper = new ObjectMapper();
             Principal principal = mapper.convertValue(authentication.getPrincipal(), Principal.class);
-            return Optional.of(principal.getName());
+            return Optional.of(principal.getEmail());
         };
     }
 }
