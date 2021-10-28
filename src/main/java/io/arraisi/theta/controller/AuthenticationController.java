@@ -33,6 +33,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AuthenticationController {
     private final PersonRepository personRepository;
 
+    @GetMapping("/monitor/ping")
+    public String ping() {
+        return "THETA STATUS OK";
+    }
+
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
