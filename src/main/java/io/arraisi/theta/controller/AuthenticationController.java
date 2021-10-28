@@ -7,7 +7,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.arraisi.theta.model.Person;
 import io.arraisi.theta.model.Role;
+import io.arraisi.theta.model.Template;
 import io.arraisi.theta.repository.PersonRepository;
+import io.arraisi.theta.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,10 +35,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final PersonRepository personRepository;
+    private final TemplateRepository templateRepository;
 
     @GetMapping("/monitor/ping")
     public String ping() {
-        return "THETA STATUS OK";
+        List<Template> templates = templateRepository.findAll();
+        if (!templates.isEmpty()) {
+            return "Ok";
+        } else {
+            return "Error";
+        }
     }
 
     @GetMapping("/token/refresh")

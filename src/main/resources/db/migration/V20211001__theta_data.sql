@@ -44,3 +44,7 @@ insert into product (id, id_shop, slug, name, quantity)
 values (2, 1, 'slug-001', 'Product 002', 1);
 insert into product (id, id_shop, slug, name, quantity)
 values (3, 1, 'slug-001', 'Product 003', 1);
+
+-- template
+insert into template (id, map_data, created_by, created, updated_by, updated, creator, editor)
+values (1, '{}', 'system', '2021-10-04 09:42:29', 'system', '2021-10-04 09:42:29', null, null);
