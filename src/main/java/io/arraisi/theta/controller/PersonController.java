@@ -5,6 +5,7 @@ import io.arraisi.theta.repository.PersonRepository;
 import io.arraisi.theta.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,16 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/person")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class PersonController {
 
+    private PersonRepository personRepository;
+
     private final PersonService personService;
-    private final PersonRepository personRepository;
+
+    public PersonController(PersonService personService) {
+        this.personService = personService;
+    }
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<Person>> list() {
