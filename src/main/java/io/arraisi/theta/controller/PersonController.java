@@ -1,11 +1,9 @@
 package io.arraisi.theta.controller;
 
 import io.arraisi.theta.model.Person;
-import io.arraisi.theta.repository.PersonRepository;
 import io.arraisi.theta.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +13,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/person")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class PersonController {
 
-    private PersonRepository personRepository;
-
     private final PersonService personService;
-
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<Person>> list() {
@@ -42,13 +34,13 @@ public class PersonController {
 
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
-        return ResponseEntity.ok().body(personRepository.count());
+        return ResponseEntity.ok().body(personService.count());
     }
 
     @GetMapping("/email")
     public ResponseEntity<Person> findByEmail(@RequestParam String email) {
         log.info("Fetching person {}", email);
-        return ResponseEntity.ok().body(personRepository.findByEmail(email));
+        return ResponseEntity.ok().body(personService.findByEmail(email));
     }
 
     @GetMapping("/list/active")
@@ -71,12 +63,12 @@ public class PersonController {
         if (person.getId() == null) {
             return ResponseEntity.badRequest().build();
         }
-        return new ResponseEntity<>(personRepository.save(person), HttpStatus.OK);
+        return new ResponseEntity<>(personService.save(person), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestParam Long id) {
-        personRepository.deleteById(id);
+        personService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 

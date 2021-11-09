@@ -1,8 +1,8 @@
 package io.arraisi.theta.service;
 
 import io.arraisi.theta.dao.PersonDao;
-import io.arraisi.theta.helper.Decorator;
 import io.arraisi.theta.helper.DataTablesResponse;
+import io.arraisi.theta.helper.Decorator;
 import io.arraisi.theta.model.Person;
 import io.arraisi.theta.model.Role;
 import io.arraisi.theta.repository.PersonRepository;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
@@ -106,5 +105,21 @@ public class PersonService extends BaseService implements UserDetailsService {
 //        int response = personRepository.deleteByActive(false);
         log.info("response: {}", response);
         return response;
+    }
+
+    public Long count() {
+        return personRepository.count();
+    }
+
+    public Person findByEmail(String email) {
+        return personRepository.findByEmail(email);
+    }
+
+    public Person save(Person person) {
+        return personRepository.save(person);
+    }
+
+    public void deleteById(Long id) {
+        personRepository.deleteById(id);
     }
 }
