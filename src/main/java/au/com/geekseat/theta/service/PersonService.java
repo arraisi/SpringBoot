@@ -6,6 +6,8 @@ import au.com.geekseat.theta.helper.Decorator;
 import au.com.geekseat.theta.model.Person;
 import au.com.geekseat.theta.model.Role;
 import au.com.geekseat.theta.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +21,6 @@ import java.util.List;
 @Service
 @Transactional
 public class PersonService extends BaseService implements UserDetailsService {
-
     public static final Decorator<Person> toDecorator = new Decorator<Person>() {
         public Person decorate(Person entity) {
             if (entity == null) {
@@ -40,6 +41,7 @@ public class PersonService extends BaseService implements UserDetailsService {
         }
     };
 
+    private final Logger LOGGER = LoggerFactory.getLogger(PersonService.class);
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
     private final PersonDao personDao;
@@ -56,13 +58,13 @@ public class PersonService extends BaseService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Person person = personRepository.findByEmail(email);
         if (person == null) {
-            // log.error("User not found in the database");
+            LOGGER.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
         } else if (!person.getActive()) {
-            // log.error("Failed to authenticate since user account is inactive");
+            LOGGER.error("Failed to authenticate since user account is inactive");
             throw new UsernameNotFoundException("User is inactive");
         } else {
-            // log.info("User found in the database: {}", email);
+            LOGGER.info("User found in the database: {}", email);
         }
 
         // new AccountStatusUserDetailsChecker().check(userDetails);
@@ -70,13 +72,13 @@ public class PersonService extends BaseService implements UserDetailsService {
     }
 
     public Person savePerson(Person person) {
-        // log.info("Saving new person {} to the database", person.getName());
+        LOGGER.info("Saving new person {} to the database", person.getName());
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
     }
 
     public Person trxDemo(Person person) throws SQLException {
-        // log.info("Saving new person {} to the database", person.getName());
+        LOGGER.info("Saving new person {} to the database", person.getName());
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         Role role = new Role();
         role.setName("Test");
@@ -86,7 +88,7 @@ public class PersonService extends BaseService implements UserDetailsService {
     }
 
     public Iterable<Person> findAll() {
-        // log.info("Fetching all persons");
+        LOGGER.info("Fetching all persons");
         return fromDecorator.decorate(personRepository.findAll());
     }
 
@@ -103,7 +105,6 @@ public class PersonService extends BaseService implements UserDetailsService {
     public int deleteInactivePerson() {
         // demo modifying query
         // int response = personRepository.deleteByActive(false);
-        // log.info("response: {}", response);
         return personRepository.deleteInactivePerson();
     }
 

@@ -1,8 +1,7 @@
 package au.com.geekseat.theta.controller;
 
 import au.com.geekseat.theta.model.Shop;
-import au.com.geekseat.theta.repository.ShopRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import au.com.geekseat.theta.service.ShopService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,17 +16,20 @@ import javax.validation.Valid;
 @RequestMapping("/api/shop")
 public class ShopController {
 
-    @Autowired
-    ShopRepository shopRepository;
+    private final ShopService service;
+
+    public ShopController(ShopService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public ResponseEntity<?> list() {
-        return new ResponseEntity<>(shopRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid Shop shop) {
-        Shop save = shopRepository.save(shop);
+        Shop save = service.save(shop);
         return new ResponseEntity<>(save, HttpStatus.CREATED);
     }
 

@@ -19,12 +19,12 @@ public class RoleController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Role>> getPersons() {
+    public ResponseEntity<Iterable<Role>> findAll() {
         return ResponseEntity.ok().body(roleRepository.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
+    public ResponseEntity<Role> save(@RequestBody Role role) {
         return new ResponseEntity<>(roleRepository.save(role), HttpStatus.CREATED);
     }
 

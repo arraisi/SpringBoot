@@ -38,7 +38,7 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Person>> list() {
+    public ResponseEntity<Iterable<Person>> findAll() {
         return ResponseEntity.ok().body(personService.findAll());
     }
 
