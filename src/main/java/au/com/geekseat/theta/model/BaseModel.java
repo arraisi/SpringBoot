@@ -51,6 +51,20 @@ public class BaseModel {
     @Transient
     protected Map<String, Object> map = new HashMap<>();
 
+    public Object get(String key) {
+        if (map != null) {
+            return map.get(key);
+        }
+        return null;
+    }
+
+    public Object set(String key, Object value) {
+        if (map != null) {
+            return map.put(key, value);
+        }
+        return null;
+    }
+
     public Long getId() {
         return id;
     }
