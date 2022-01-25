@@ -11,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -47,8 +49,7 @@ public class BaseModel {
     protected Object storageMap;
 
     @Transient
-    @Convert(converter = MapConverter.class)
-    protected Object transitMap;
+    protected Map<String, Object> map = new HashMap<>();
 
     public Long getId() {
         return id;
@@ -114,11 +115,11 @@ public class BaseModel {
         this.storageMap = storageMap;
     }
 
-    public Object getTransitMap() {
-        return transitMap;
+    public Map<String, Object> getMap() {
+        return map;
     }
 
-    public void setTransitMap(Object transitMap) {
-        this.transitMap = transitMap;
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
     }
 }
