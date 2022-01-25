@@ -1,7 +1,6 @@
 package au.com.geekseat.theta.model;
 
 import au.com.geekseat.theta.helper.LocalDateConverter;
-import au.com.geekseat.theta.helper.MapConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Type;

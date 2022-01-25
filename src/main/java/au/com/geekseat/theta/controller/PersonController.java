@@ -18,7 +18,26 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @GetMapping("/list")
+    @PostMapping
+    public ResponseEntity<Person> save(@RequestBody Person person) {
+        return new ResponseEntity<>(personService.savePerson(person), HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody Person person) {
+        if (person.getId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return new ResponseEntity<>(personService.save(person), HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestParam Long id) {
+        personService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
     public ResponseEntity<Iterable<Person>> list() {
         return ResponseEntity.ok().body(personService.findAll());
     }
@@ -39,41 +58,21 @@ public class PersonController {
 
     @GetMapping("/email")
     public ResponseEntity<Person> findByEmail(@RequestParam String email) {
-//        log.info("Fetching person {}", email);
         return ResponseEntity.ok().body(personService.findByEmail(email));
     }
 
-    @GetMapping("/list/active")
+    @GetMapping("/active")
     public ResponseEntity<Iterable<Person>> findByActive(@RequestParam Boolean active) {
         return ResponseEntity.ok().body(personService.findByActive(active));
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Person> save(@RequestBody Person person) {
-        return new ResponseEntity<>(personService.savePerson(person), HttpStatus.CREATED);
+    @DeleteMapping("/inactive")
+    public ResponseEntity<?> deleteInactivePerson() {
+        return ResponseEntity.ok(personService.deleteInactivePerson());
     }
 
     @PostMapping("/trx/demo")
     public ResponseEntity<Person> trxDemo(@RequestBody Person person) throws Exception {
         return new ResponseEntity<>(personService.trxDemo(person), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody Person person) {
-        if (person.getId() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return new ResponseEntity<>(personService.save(person), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long id) {
-        personService.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/inactive/delete")
-    public ResponseEntity<?> deleteInactivePerson() {
-        return ResponseEntity.ok(personService.deleteInactivePerson());
     }
 }

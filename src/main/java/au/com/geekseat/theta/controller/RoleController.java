@@ -18,18 +18,17 @@ public class RoleController {
         this.roleRepository = roleRepository;
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<Iterable<Role>> getPersons() {
         return ResponseEntity.ok().body(roleRepository.findAll());
     }
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
-//        log.info("Saving new role {} to the database", role.getName());
         return new ResponseEntity<>(roleRepository.save(role), HttpStatus.CREATED);
     }
 
-    @PostMapping("/addtoperson")
+    @PostMapping("/to/person")
     public ResponseEntity<?> addRoleToPerson(@RequestParam String username, @RequestParam String roleName) {
         roleService.addRoleToPerson(username, roleName);
         return ResponseEntity.ok().build();

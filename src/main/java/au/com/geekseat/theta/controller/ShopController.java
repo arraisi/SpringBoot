@@ -20,12 +20,12 @@ public class ShopController {
     @Autowired
     ShopRepository shopRepository;
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<?> list() {
         return new ResponseEntity<>(shopRepository.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid Shop shop) {
         Shop save = shopRepository.save(shop);
         return new ResponseEntity<>(save, HttpStatus.CREATED);
