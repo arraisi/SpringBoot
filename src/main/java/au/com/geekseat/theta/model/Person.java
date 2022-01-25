@@ -1,10 +1,9 @@
 package au.com.geekseat.theta.model;
 
+import au.com.geekseat.theta.helper.LocalDateConverter;
+import au.com.geekseat.theta.helper.MapConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,14 +13,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.*;
 
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Person extends BaseModel implements UserDetails {
     @NotNull
     @NotEmpty
@@ -31,6 +28,9 @@ public class Person extends BaseModel implements UserDetails {
     @NotEmpty
     @Size(min = 4, max = 256)
     private String email;
+
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate birth;
 
     @NotNull
     @NotEmpty
@@ -50,10 +50,14 @@ public class Person extends BaseModel implements UserDetails {
     @Transient
     protected List<String> attachmentList = new ArrayList<>();
 
+    public Person() {
+    }
+
     public Person(Person person) {
         this.setId(person.getId());
         this.name = person.getName();
         this.email = person.getEmail();
+        this.birth = person.getBirth();
         this.password = person.getPassword();
         this.active = person.getActive();
         this.roles = person.getRoles();
@@ -108,5 +112,70 @@ public class Person extends BaseModel implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.active;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDate getBirth() {
+        return birth;
+    }
+
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getAttachmentListData() {
+        return attachmentListData;
+    }
+
+    public void setAttachmentListData(String attachmentListData) {
+        this.attachmentListData = attachmentListData;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<String> getAttachmentList() {
+        return attachmentList;
+    }
+
+    public void setAttachmentList(List<String> attachmentList) {
+        this.attachmentList = attachmentList;
     }
 }

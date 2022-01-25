@@ -2,21 +2,21 @@ package au.com.geekseat.theta.controller;
 
 import au.com.geekseat.theta.service.PersonService;
 import au.com.geekseat.theta.model.Person;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/person")
-@RequiredArgsConstructor
 public class PersonController {
 
     private final PersonService personService;
+
+    public PersonController(PersonService personService) {
+        this.personService = personService;
+    }
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<Person>> list() {
@@ -39,7 +39,7 @@ public class PersonController {
 
     @GetMapping("/email")
     public ResponseEntity<Person> findByEmail(@RequestParam String email) {
-        log.info("Fetching person {}", email);
+//        log.info("Fetching person {}", email);
         return ResponseEntity.ok().body(personService.findByEmail(email));
     }
 

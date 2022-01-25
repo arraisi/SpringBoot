@@ -2,25 +2,25 @@ package au.com.geekseat.theta.dao;
 
 import au.com.geekseat.theta.helper.Utility;
 import au.com.geekseat.theta.model.Person;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Slf4j
 @Repository
-@RequiredArgsConstructor
 public class PersonDao {
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public PersonDao(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Person> listDataTables(Long page, Long itemsPerPage, List<String> sortBy, List<Boolean> sortDesc) {
         StringBuilder baseQuery = new StringBuilder("" +
                 "select "
                 + "id, "
-                + "map_data, "
+                + "storage_map, "
                 + "name, "
                 + "email, "
                 + "password, "

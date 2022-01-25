@@ -6,8 +6,6 @@ import au.com.geekseat.theta.helper.Decorator;
 import au.com.geekseat.theta.model.Person;
 import au.com.geekseat.theta.model.Role;
 import au.com.geekseat.theta.repository.PersonRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class PersonService extends BaseService implements UserDetailsService {
 
@@ -49,43 +45,48 @@ public class PersonService extends BaseService implements UserDetailsService {
     private final PersonDao personDao;
     private final RoleService roleService;
 
+    public PersonService(PersonRepository personRepository, PasswordEncoder passwordEncoder, PersonDao personDao, RoleService roleService) {
+        this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.personDao = personDao;
+        this.roleService = roleService;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Person person = personRepository.findByEmail(email);
         if (person == null) {
-            log.error("User not found in the database");
+            // log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
         } else if (!person.getActive()) {
-            log.error("Failed to authenticate since user account is inactive");
+            // log.error("Failed to authenticate since user account is inactive");
             throw new UsernameNotFoundException("User is inactive");
         } else {
-            log.info("User found in the database: {}", email);
+            // log.info("User found in the database: {}", email);
         }
 
-        UserDetails userDetails = new Person(person);
-//        new AccountStatusUserDetailsChecker().check(userDetails);
-        return userDetails;
+        // new AccountStatusUserDetailsChecker().check(userDetails);
+        return new Person(person);
     }
 
     public Person savePerson(Person person) {
-        log.info("Saving new person {} to the database", person.getName());
-        toDecorator.decorate(person);
+        // log.info("Saving new person {} to the database", person.getName());
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
     }
 
     public Person trxDemo(Person person) throws SQLException {
-        log.info("Saving new person {} to the database", person.getName());
+        // log.info("Saving new person {} to the database", person.getName());
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         Role role = new Role();
         role.setName("Test");
         roleService.save(role);
-//        throw new SQLException("Throwing exception for demoing rollback");
-        return personRepository.save(null);
+        // throw new SQLException("Throwing exception for demoing rollback");
+        return personRepository.save(person);
     }
 
     public Iterable<Person> findAll() {
-        log.info("Fetching all persons");
+        // log.info("Fetching all persons");
         return fromDecorator.decorate(personRepository.findAll());
     }
 
@@ -101,10 +102,9 @@ public class PersonService extends BaseService implements UserDetailsService {
 
     public int deleteInactivePerson() {
         // demo modifying query
-        int response = personRepository.deleteInactivePerson();
-//        int response = personRepository.deleteByActive(false);
-        log.info("response: {}", response);
-        return response;
+        // int response = personRepository.deleteByActive(false);
+        // log.info("response: {}", response);
+        return personRepository.deleteInactivePerson();
     }
 
     public Long count() {

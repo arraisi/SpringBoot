@@ -49,7 +49,10 @@ public class Shop extends BaseModel {
         level3.put("level4", level4);
         level2.put("level3", level3);
         level1.put("level2", level2);
-        map.put("level1", level1);
+//        map.put("level1", level1);
+        Map<String, Map> _level1 = new HashMap<>();
+        _level1.put("level1", level1);
+        storageMap = _level1;
     }
 
     public Shop(Long id, String slug, String name) {

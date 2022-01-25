@@ -1,5 +1,6 @@
 package au.com.geekseat.theta.model;
 
+import au.com.geekseat.theta.helper.MapConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
@@ -10,8 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -44,20 +43,12 @@ public class BaseModel {
     @Type(type = "text")
     protected String editor;
 
-    @JsonIgnore
-    @Type(type = "text")
-    protected String mapData;
+    @Convert(converter = MapConverter.class)
+    protected Object storageMap;
 
     @Transient
-    @JsonIgnore
-    @Type(type = "text")
-    protected String transitMapData;
-
-    @Transient
-    protected Map<String, Object> map = new HashMap<>();
-
-    @Transient
-    protected Map<String, Object> transitMap = new HashMap<>();
+    @Convert(converter = MapConverter.class)
+    protected Object transitMap;
 
     public Long getId() {
         return id;
@@ -115,35 +106,19 @@ public class BaseModel {
         this.editor = editor;
     }
 
-    public String getMapData() {
-        return mapData;
+    public Object getStorageMap() {
+        return storageMap;
     }
 
-    public void setMapData(String mapData) {
-        this.mapData = mapData;
+    public void setStorageMap(Object storageMap) {
+        this.storageMap = storageMap;
     }
 
-    public String getTransitMapData() {
-        return transitMapData;
-    }
-
-    public void setTransitMapData(String transitMapData) {
-        this.transitMapData = transitMapData;
-    }
-
-    public Map<String, Object> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, Object> map) {
-        this.map = map;
-    }
-
-    public Map<String, Object> getTransitMap() {
+    public Object getTransitMap() {
         return transitMap;
     }
 
-    public void setTransitMap(Map<String, Object> transitMap) {
+    public void setTransitMap(Object transitMap) {
         this.transitMap = transitMap;
     }
 }

@@ -10,8 +10,6 @@ import au.com.geekseat.theta.model.Role;
 import au.com.geekseat.theta.model.Template;
 import au.com.geekseat.theta.repository.PersonRepository;
 import au.com.geekseat.theta.repository.TemplateRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,13 +27,16 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Slf4j
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class AuthenticationController {
     private final PersonRepository personRepository;
     private final TemplateRepository templateRepository;
+
+    public AuthenticationController(PersonRepository personRepository, TemplateRepository templateRepository) {
+        this.personRepository = personRepository;
+        this.templateRepository = templateRepository;
+    }
 
     @GetMapping("/monitor/ping")
     public String ping() {
@@ -72,7 +73,7 @@ public class AuthenticationController {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception exception) {
-                log.error("Error loggin in: {}", exception.getMessage());
+//                log.error("Error loggin in: {}", exception.getMessage());
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 Map<String, String> error = new HashMap<>();
